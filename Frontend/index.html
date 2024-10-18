@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AriEm-Chat</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="src/main.tsx"></script>
+    <!--  ACA COMO ES ENTORNO LOCAL REEMPLAZAR LA IP LOCAL  -->
+     <form action="http://192.168.137.1/Chat/Login/login.php" method="post">
+      <input type="email" name="email" id="email" required placeholder="Correo electrónico">
+      <input type="password" name="password" id="pass" required placeholder="Contraseña">
+      <button type="submit">Ingresar</button>
+       <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            background-color: #f4f4f4;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: auto;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #response {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+  </form>
+  </body>
+</html>
