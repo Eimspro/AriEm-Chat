@@ -1,5 +1,5 @@
 <?php
-// Emilio Madriz
+// Datos de conexión
 $servidor = "localhost"; 
 $usuario = "root"; 
 $contrasena = ""; 
@@ -13,7 +13,4 @@ if (!$conexion) {
     die("Error de conexión: " . mysqli_connect_error());
 }
 
-
-// Cerrar la conexión al final
-mysqli_close($conexion);
 ?>

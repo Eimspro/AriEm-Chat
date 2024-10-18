@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Realizar la inserción en la tabla de usuarios
     $sql = "INSERT INTO usuarios (name, phone, password, email, private_table) VALUES (?, ?, ?, ?, ?)";
-
+    
     // Preparar la sentencia
     if ($stmt = mysqli_prepare($conexion, $sql)) {
         // Vincular parámetros
@@ -73,23 +73,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         // Ejecutar
         if (mysqli_stmt_execute($stmt)) {
-            // Establecer la cookie con la opción Secure y HttpOnly
-            $cookie_value = json_encode(['name' => $name, 'phone' => $phone]);
-            setcookie("loginfull", $cookie_value, time() + (86400 * 30), "/", "", true, true); // Dominio, ruta, tiempo de expiración, Secure, HttpOnly
-            
             // Crear la tabla privada para el usuario
-            $sql_create_table = "CREATE TABLE $private_table_name (
+            $sql_create_table = "CREATE TABLE `$private_table_name` (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 phone_send VARCHAR(15),
                 phone_receive VARCHAR(15),
                 name_send VARCHAR(255),
+                name_receive VARCHAR(255),
                 message TEXT
             )";
 
+            // Intentar crear la tabla
             if (mysqli_query($conexion, $sql_create_table)) {
+                // Establecer la cookie con la opción Secure y HttpOnly
+                $cookie_value = json_encode(['name' => $name, 'phone' => $phone]);
+                setcookie("loginfull", $cookie_value, time() + (86400 * 30), "/", "", true, true); // Dominio, ruta, tiempo de expiración, Secure, HttpOnly
+                
                 $response = ["status" => "success", "message" => "Usuario registrado exitosamente y tabla privada creada."];
             } else {
-                $response = ["status" => "success", "message" => "Usuario registrado, pero ocurrió un error al crear la tabla privada: " . mysqli_error($conexion)];
+                // Si falla la creación de la tabla, deshacer la inserción del usuario
+                $delete_user_sql = "DELETE FROM usuarios WHERE id = LAST_INSERT_ID()"; // Eliminar el último usuario insertado
+                mysqli_query($conexion, $delete_user_sql);
+                
+                $response = ["status" => "error", "message" => "Usuario registrado, pero ocurrió un error al crear la tabla privada: " . mysqli_error($conexion)];
             }
         } else {
             $response = ["status" => "error", "message" => "Error: " . mysqli_stmt_error($stmt)];
@@ -107,4 +113,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 // Cerrar la conexión a la base de datos
 mysqli_close($conexion);
-?> 
+?>
